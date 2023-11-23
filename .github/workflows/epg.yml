@@ -17,4 +17,4 @@ jobs:
         git config --global user.email mingming@live.com
         git add e.xml
         git commit -m "Update e.xml"
-        git push -f origin netxJs-main
+        git push -f origin nextJs-main
