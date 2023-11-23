@@ -34,7 +34,7 @@ function m3u8ToTxt(input) {
           currentGenre = parts[1].trim();
           // console.log(currentGenre);
           const genreMatch = parts[0].match(/group-title="([^"]+)"/) ;
-          const tmpStr = '</br>' + genreMatch[1] + ',#genre#';
+          const tmpStr = '\n' + genreMatch[1] + ',#genre#';
           let tmpList = resultJson[tmpStr];
           if (!tmpList) {
             tmpList = [];
@@ -57,9 +57,10 @@ function m3u8ToTxt(input) {
     const result = [];
     Object.entries(resultJson).forEach(([key, value]) => {
         result.push(key);
-        result.push(value.join('</br>'));
+        result.push(value.join('\n'));
         // console.log('Key: ' + key + ', Value: ' + value);
       });
-    return result.join('</br>');
+    result[0] = result[0].replace('\n', '')
+    return result.join('\n');
   }
   
