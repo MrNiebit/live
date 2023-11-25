@@ -1,6 +1,19 @@
 import CryptoJS from 'crypto-js';
 import Cors from 'cors';
+
 // import http from 'http'
+
+ function initMiddleware(middleware) {
+    return (req, res) =>
+      new Promise((resolve, reject) => {
+        middleware(req, res, (result) => {
+          if (result instanceof Error) {
+            return reject(result);
+          }
+          return resolve(result);
+        });
+      });
+  }
 
 // 初始化 CORS 中间件
 const cors = initMiddleware(
