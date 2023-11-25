@@ -31,6 +31,7 @@ async function exportRecordList() {
     const responseJson = await response.json();
     const totalPage = responseJson.data.totalPage;
     console.log(totalPage);
+    console.log(responseJson.data.totalCount)
     // console.log(JSON.stringify(responseJson));
     const datas = responseJson.data.datas;
     const itemList = ["虎牙直播【一起看】,#genre#"]
@@ -38,6 +39,7 @@ async function exportRecordList() {
         itemList.push(data.introduction + ',' + baseApiUrl + data.profileRoom);
     }
     for (page = 2; page <= totalPage; page++) {
+        console.log(page);
         const response = await fetch(`https://www.huya.com/cache.php?m=LiveList&do=getLiveListByPage&gameId=2135&tagAll=0&page=${page}`);
         const responseJson = await response.json();
         const datas = responseJson.data.datas;
@@ -45,6 +47,7 @@ async function exportRecordList() {
             itemList.push(data.introduction + ',' + baseApiUrl + data.profileRoom);
         }
     }
+    console.log(itemList.length);
 
     // 目标文件路径
     const filePath = path.join(process.cwd(), 'public/huya', 'huya.txt');

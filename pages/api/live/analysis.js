@@ -1,8 +1,20 @@
 import CryptoJS from 'crypto-js';
+import Cors from 'cors';
 // import http from 'http'
+
+// 初始化 CORS 中间件
+const cors = initMiddleware(
+    Cors({
+      methods: ['GET', 'POST', 'OPTIONS'], // 允许的 HTTP 方法
+    })
+  );
 
 export default async function handler(req, resp) {
     console.log('analysis process !!!!')
+    // 运行 CORS 中间件
+    await cors(req, resp);
+    // 如果需要允许多个来源，可以使用通配符 *
+    resp.setHeader('Access-Control-Allow-Origin', '*');
     if (req.method === 'GET') {
         const {roomId} = req.query;
         const liveUrl = await getFlvV2(roomId);
