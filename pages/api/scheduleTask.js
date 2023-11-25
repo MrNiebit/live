@@ -21,7 +21,7 @@ function startScheduledTask() {
     });
 }
 
-const baseApiUrl = 'http://localhost:3000/api/live/analysis?roomId=';
+const baseApiUrl = 'https://tv.lacknb.com/api/live/analysis?roomId=';
 
 async function exportRecordList() {
 

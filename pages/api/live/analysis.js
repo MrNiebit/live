@@ -7,11 +7,11 @@ export default async function handler(req, resp) {
         const {roomId} = req.query;
         const liveUrl = await getFlvV2(roomId);
         // resp.status(200).send(liveUrl);
-        // resp.redirect(liveUrl);
+        // resp.redirect(302, liveUrl);
+        // resp.end();
 
-        resp.writeHead(302, {
-            Location: liveUrl
-        });
+        const encodedUrl = encodeURI(liveUrl);
+        resp.writeHead(302, { Location: encodedUrl });
         resp.end();
 
           // 解析客户端的请求
