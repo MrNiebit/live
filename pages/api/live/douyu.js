@@ -130,8 +130,9 @@ export async function getRealUrl(roomId) {
 
 export async function yqkList() {
 
-  let page = 1;
-  const apiUrl = `https://m.douyu.com/hgapi/live/cate/newRecList?offset=${page}&cate2=yqk&limit=20`
+  let offset = 0;
+  const limit = 20;
+  const apiUrl = `https://m.douyu.com/hgapi/live/cate/newRecList?offset=${offset}&cate2=yqk&limit=${limit}`
   const response = await fetch(apiUrl);
   if (response.ok) {
     const itemList = ["斗鱼直播【一起看】,#genre#"]
@@ -139,14 +140,14 @@ export async function yqkList() {
     const data = await response.json();
     const total = data.data.total;
     console.log('douyu tota: ', total);
-    const pageCount = Math.ceil(total / 20);
+    // const pageCount = Math.ceil(total / 20);
     let datas = data.data.list;
     for (const item of datas) {
       itemList.push(`${item.roomName},${baseApiUrl}${item.rid}`);
     }
 
-    for(page = 2; page <= pageCount; page++) {
-      const response = await fetch(`https://m.douyu.com/hgapi/live/cate/newRecList?offset=${page}&cate2=yqk&limit=20`);
+    for(offset = 20; offset <= total; offset += 20) {
+      const response = await fetch(`https://m.douyu.com/hgapi/live/cate/newRecList?offset=${offset}&cate2=yqk&limit=${limit}`);
       if (response.ok) {
         const data = await response.json();
         let datas = data.data.list;
