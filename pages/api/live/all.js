@@ -3,7 +3,7 @@ import fs from "fs";
 
 import eventBus from '../../../util/eventBus';
 
-import {getHuyaLive} from "../../../util/liveData";
+import {getDouyuLive, getHuyaLive} from "../../../util/liveData";
 
 const ipv6Str = fs.readFileSync(path.join(process.cwd(), 'public/tv/txt', 'ipv6.txt'), 'utf-8');
 
@@ -20,8 +20,9 @@ export default async function handler(req, resp) {
     if (req.method === 'GET') {
         resp.setHeader('Content-Type', 'text/html; charset=UTF-8'); // 设置正确的字符编码
         let huyaLiveStr = await getHuyaLive();
+        let douyuLiveStr = await getDouyuLive();
         // console.log(huyaLiveStr);
-        resp.status(200).send(`${ipv6Str}\n${huyaLiveStr}`);
+        resp.status(200).send(`${ipv6Str}\n\n${huyaLiveStr}\n\n${douyuLiveStr}`);
     } else {
         // 处理其他请求方法
         resp.status(405).json({ error: 'Method Not Allowed!' });

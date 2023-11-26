@@ -1,7 +1,10 @@
 import { exportRecordList } from "../pages/api/scheduleTask";
+import { yqkList } from "../pages/api/live/douyu";
+
 
 let liveData = {
-    huya: ""
+    huya: "",
+    douyu: ""
 };
 
 
@@ -19,6 +22,23 @@ export async function getHuyaLive() {
         // 如果缓存中没有值，调用 exportRecordList 获取数据，并存入缓存
         const data = await exportRecordList();
         liveData.huya = data;
+        return data;
+      }
+}
+
+export async function updateDouyuLive() {
+    const newData = await yqkList(); // 从 exportRecordList 获取最新的数据
+    liveData.douyu = newData; // 将最新数据存入缓存
+}
+
+export async function getDouyuLive() {
+    if (liveData.douyu) {
+        // 如果缓存中已经有值，直接返回缓存的数据
+        return liveData.douyu;
+      } else {
+        // 如果缓存中没有值，调用 yqkList 获取数据，并存入缓存
+        const data = await yqkList();
+        liveData.douyu = data;
         return data;
       }
 }

@@ -1,5 +1,6 @@
 import CryptoJS from 'crypto-js';
 import Cors from 'cors';
+import {getRealUrl} from './douyu'
 
 // import http from 'http'
 
@@ -29,8 +30,13 @@ export default async function handler(req, resp) {
     // 如果需要允许多个来源，可以使用通配符 *
     resp.setHeader('Access-Control-Allow-Origin', '*');
     if (req.method === 'GET') {
-        const {roomId} = req.query;
-        const liveUrl = await getFlvV2(roomId);
+        const {roomId, type} = req.query;
+        let liveUrl = '';
+        if (type === 'douyu') {
+          liveUrl = await getRealUrl(roomId);
+        } else {
+          liveUrl = await getFlvV2(roomId);
+        }
         // resp.status(200).send(liveUrl);
         // resp.redirect(302, liveUrl);
         // resp.end();

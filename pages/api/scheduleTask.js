@@ -6,7 +6,8 @@ import fs from 'fs'
 import path from 'path'
 import cron from 'node-cron'
 import eventBus from '../../util/eventBus';
-import {updateHuyaLive} from "../../util/liveData";
+// import { yqkList } from './live/douyu'; 
+import {updateHuyaLive, updateDouyuLive} from "../../util/liveData";
 
 
 
@@ -23,11 +24,15 @@ export default async function handler(req, res) {
 async function startScheduledTask() {
     console.log(1111);
     await updateHuyaLive();
+    await updateDouyuLive();
     cron.schedule('0 0 */2 * * *', function () {
         console.log(2222);
         updateHuyaLive();
+        updateDouyuLive();
     });
 }
+
+
 
 export async function exportRecordList() {
 
@@ -37,7 +42,7 @@ export async function exportRecordList() {
     const responseJson = await response.json();
     const totalPage = responseJson.data.totalPage;
     console.log(totalPage);
-    console.log(responseJson.data.totalCount)
+    console.log("huya total: ", responseJson.data.totalCount)
     // console.log(JSON.stringify(responseJson));
     const datas = responseJson.data.datas;
     const itemList = ["虎牙直播【一起看】,#genre#"]
@@ -45,7 +50,6 @@ export async function exportRecordList() {
         itemList.push(data.introduction + ',' + baseApiUrl + data.profileRoom);
     }
     for (page = 2; page <= totalPage; page++) {
-        console.log(page);
         const response = await fetch(`https://www.huya.com/cache.php?m=LiveList&do=getLiveListByPage&gameId=2135&tagAll=0&page=${page}`);
         const responseJson = await response.json();
         const datas = responseJson.data.datas;
