@@ -40,7 +40,7 @@ export async function exportRecordList() {
     const apiUrl = `https://www.huya.com/cache.php?m=LiveList&do=getLiveListByPage&gameId=2135&tagAll=0&page=${page}`;
     const response = await fetch(apiUrl);
     const responseJson = await response.json();
-    const totalPage = responseJson.data.totalPage;
+    const totalPage = Math.min(responseJson.data.totalPage, 3);
     console.log(totalPage);
     console.log("huya total: ", responseJson.data.totalCount)
     // console.log(JSON.stringify(responseJson));

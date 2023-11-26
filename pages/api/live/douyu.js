@@ -146,7 +146,7 @@ export async function yqkList() {
     }
 
     for(page = 2; page <= pageCount; page++) {
-      const response = await fetch(apiUrl);
+      const response = await fetch(`https://m.douyu.com/hgapi/live/cate/newRecList?offset=${page}&cate2=yqk&limit=20`);
       if (response.ok) {
         const data = await response.json();
         let datas = data.data.list;
