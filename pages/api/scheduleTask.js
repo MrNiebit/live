@@ -5,25 +5,31 @@
 import fs from 'fs'
 import path from 'path'
 import cron from 'node-cron'
+import eventBus from '../../util/eventBus';
+import {updateHuyaLive} from "../../util/liveData";
+
+
+
+// export let huyaLive = { content: ''};
+const baseApiUrl = 'https://tv.lacknb.com/api/live/analysis?roomId=';
 
 // 返回响应
-export default function handler(req, res) {
+export default async function handler(req, res) {
+    await startScheduledTask();
     res.status(200).json({ message: '定时任务已启动' });
 }
-startScheduledTask();
+ 
 
-function startScheduledTask() {
+async function startScheduledTask() {
     console.log(1111);
-    exportRecordList();
+    await updateHuyaLive();
     cron.schedule('0 0 */2 * * *', function () {
         console.log(2222);
-        exportRecordList();
+        updateHuyaLive();
     });
 }
 
-const baseApiUrl = 'https://tv.lacknb.com/api/live/analysis?roomId=';
-
-async function exportRecordList() {
+export async function exportRecordList() {
 
     let page = 1;
     const apiUrl = `https://www.huya.com/cache.php?m=LiveList&do=getLiveListByPage&gameId=2135&tagAll=0&page=${page}`;
@@ -48,21 +54,28 @@ async function exportRecordList() {
         }
     }
     console.log(itemList.length);
+    // setHuyaLive(itemList.join('\n'))
+    return itemList.join('\n');
 
     // 目标文件路径
-    const filePath = path.join(process.cwd(), 'public/huya', 'huya.txt');
+    // const filePath = path.join(process.cwd(), 'public/huya', 'huya.txt');
 
-    // 写入文件
-    fs.writeFile(filePath, itemList.join('\n'), (err) => {
-        if (err) {
-            console.error(err); 
-            return;
-        }
-        console.log('File has been written to public directory');
-        mergeFile();
-    });
+    // // 写入文件
+    // fs.writeFile(filePath, itemList.join('\n'), (err) => {
+    //     if (err) {
+    //         console.error(err); 
+    //         return;
+    //     }
+    //     console.log('File has been written to public directory');
+    //     mergeFile();
+    // });
     
 }
+
+// 在某个地方更改共享变量的对象
+function changeSharedObject(newValue) {
+    eventBus.publish('huyaLiveStr', newValue);
+  }
 
 async function mergeFile() {
     // 读取要合并的两个文件
@@ -77,4 +90,3 @@ async function mergeFile() {
     fs.writeFileSync(newFilePath, mergedContent, 'utf-8');
 
 }
-
