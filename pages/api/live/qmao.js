@@ -11,7 +11,7 @@ export default async function handler(req, resp) {
         const liveList = await getLiveList(type);
         const itemList = [`QMAO直播TYPE=${type}【QMAO】,#genre#`];
         for (const item of liveList) {
-            console.log(item.nplayFlv)
+            // console.log(item.nplayFlv)
             const dec = await decryptUrl(item.nplayFlv.trim());
             itemList.push(`${item.title},${dec}`);
         } 
